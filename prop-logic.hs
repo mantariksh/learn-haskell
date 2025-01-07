@@ -33,8 +33,8 @@ gatherChars :: Prop -> [Char]
 gatherChars (Const b) = []
 gatherChars (Var c) = [c]
 gatherChars (Not p) = gatherChars p
-gatherChars (p1 `And` p2) = nub (gatherChars p1 ++ gatherChars p2)
-gatherChars (p1 `Imply` p2) = nub (gatherChars p1 ++ gatherChars p2)
+gatherChars (p1 `And` p2) = gatherChars p1 ++ gatherChars p2
+gatherChars (p1 `Imply` p2) = gatherChars p1 ++ gatherChars p2
 
 allCombinationBools :: Int -> [[Bool]]
 allCombinationBools 0 = []
@@ -47,4 +47,4 @@ allCombinationBoolsForChars :: [Char] -> [[(Char, Bool)]]
 allCombinationBoolsForChars cs = [zip cs bs | bs <- allCombinationBools (length cs)]
 
 isTautology :: Prop -> Bool
-isTautology p = and [isTrue p m | m <- (allCombinationBoolsForChars . gatherChars) p]
+isTautology p = and [isTrue p m | m <- (allCombinationBoolsForChars . nub . gatherChars) p]
